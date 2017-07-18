@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
+import { ipcRenderer } from "electron";
 
 import Header from "./Header";
 import TasksIndex from "./TasksIndex";
@@ -48,11 +49,11 @@ class App extends Component {
   };
 
   updateTrayText = title => {
-
+    ipcRenderer.send('update-timer', title);
   };
 
   timerHasExpired = () => {
-
+    ipcRenderer.send('update-timer', '');
   };
 
   // -------- end of electron event handerls ----------
@@ -114,6 +115,7 @@ class App extends Component {
     this.setState({
       tasks: this.state.tasks.filter(item => item.id !== task.id)
     });
+    
   };
 
   handleSettingsUpdate = newSettings => {
@@ -148,6 +150,7 @@ class App extends Component {
       tasks: [activeTask, ...this.state.tasks],
       activeTask: null
     });
+    ipcRenderer.send('update-timer', '');
   };
 
   handleTimerStart = () => {
